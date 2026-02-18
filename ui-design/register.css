@@ -1,0 +1,395 @@
+/* 注册界面样式 */
+
+/* 注册容器 */
+.register-container {
+  width: 100%;
+  max-width: 420px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* 顶部导航 */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-4px);
+}
+
+.nav-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+/* 步骤指示器 */
+.steps-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.step-dot.active {
+  background: #2ECC71;
+  transform: scale(1.3);
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
+}
+
+.step-dot.completed {
+  background: #2ECC71;
+}
+
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: #E0E0E0;
+  transition: all 0.3s ease;
+}
+
+.step-line.active {
+  background: #2ECC71;
+}
+
+/* 步骤内容 */
+.step-content {
+  display: none;
+  animation: slideIn 0.3s ease-out;
+}
+
+.step-content.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 表单区域 */
+.form-section {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+  margin-bottom: 24px;
+}
+
+/* 验证码按钮 */
+.verification-btn {
+  padding: 0 16px;
+  height: 56px;
+  background: #2ECC71;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+.verification-btn:hover:not(:disabled) {
+  background: #27AE60;
+  transform: scale(1.02);
+}
+
+.verification-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.verification-btn:disabled {
+  background: #BDC3C7;
+  cursor: not-allowed;
+}
+
+/* 验证码输入框 */
+.verification-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.verification-input {
+  width: 44px;
+  height: 56px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  background: #F8F9FA;
+  border: 2px solid #E0E0E0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.verification-input:focus {
+  border-color: #2ECC71;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+}
+
+.verification-input.error {
+  border-color: #E74C3C;
+  background: #FFF5F5;
+}
+
+/* 倒计时文字 */
+.countdown-text {
+  text-align: center;
+  color: #7F8C8D;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* 头像上传 */
+.avatar-upload-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.avatar-upload {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #F8F9FA;
+  border: 2px dashed #E0E0E0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto 8px;
+  overflow: hidden;
+}
+
+.avatar-upload:hover {
+  border-color: #2ECC71;
+  background: rgba(46, 204, 113, 0.05);
+  transform: scale(1.05);
+}
+
+.avatar-upload img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #7F8C8D;
+}
+
+.avatar-placeholder i {
+  font-size: 32px;
+  color: #2ECC71;
+}
+
+.optional-hint {
+  color: #7F8C8D;
+  font-size: 12px;
+}
+
+/* 必填标记 */
+.required-mark {
+  color: #E74C3C;
+  margin-left: 2px;
+}
+
+.optional-text {
+  color: #7F8C8D;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* 按钮组 */
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  flex: 1;
+  height: 56px;
+}
+
+.btn-secondary {
+  background: #F8F9FA;
+  color: #34495E;
+  border: 2px solid #E0E0E0;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: #E0E0E0;
+}
+
+/* 密码强度 */
+.password-strength {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.strength-dot {
+  width: 32px;
+  height: 6px;
+  background: #E0E0E0;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.strength-dot.weak {
+  background: #E74C3C;
+}
+
+.strength-dot.medium {
+  background: #F39C12;
+}
+
+.strength-dot.strong {
+  background: #2ECC71;
+}
+
+/* 密码要求 */
+.password-requirements {
+  background: #F8F9FA;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #7F8C8D;
+  margin-bottom: 8px;
+}
+
+.requirement:last-child {
+  margin-bottom: 0;
+}
+
+.requirement-icon {
+  font-size: 8px;
+  color: #E0E0E0;
+  transition: all 0.3s ease;
+}
+
+.requirement.met .requirement-icon {
+  color: #2ECC71;
+}
+
+.requirement.met {
+  color: #2ECC71;
+}
+
+/* 底部区域 */
+.footer-section {
+  text-align: center;
+}
+
+.register-link {
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .register-container {
+    padding: 0;
+  }
+
+  .form-section {
+    border-radius: 0;
+    padding: 24px;
+    box-shadow: none;
+  }
+
+  .header-nav {
+    margin-bottom: 24px;
+  }
+
+  .step-line {
+    width: 30px;
+  }
+
+  .verification-input {
+    width: 40px;
+  }
+}
+
+@media (min-width: 768px) {
+  .register-container {
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+    padding: 60px 50px;
+  }
+
+  .header-nav {
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-title {
+    color: #2C3E50;
+    background: none;
+    -webkit-text-fill-color: initial;
+  }
+
+  .back-btn {
+    background: #F8F9FA;
+    color: #34495E;
+  }
+
+  .back-btn:hover {
+    background: #E0E0E0;
+  }
+}

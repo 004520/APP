@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>注册 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="register-toast.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="register-container">
+    <!-- 顶部导航 -->
+    <div class="header-nav">
+      <button class="back-btn" id="backBtn">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回</span>
+      </button>
+      <h1 class="nav-title">注册新账户</h1>
+    </div>
+
+    <!-- 步骤指示器 -->
+    <div class="steps-indicator">
+      <div class="step-dot active" data-step="1"></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="2"></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="3"></div>
+    </div>
+
+    <!-- 步骤1：验证手机号 -->
+    <div class="step-content active" data-step="1">
+      <div class="form-section">
+        <!-- 手机号输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-mobile-alt input-icon"></i>
+            <span>手机号</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              type="tel"
+              id="registerPhone"
+              class="input"
+              placeholder="请输入手机号"
+              maxlength="11"
+              autocomplete="tel"
+            >
+            <button type="button" class="verification-btn" id="sendCodeBtn">
+              发送验证码
+            </button>
+          </div>
+          <div class="error-msg" id="registerPhoneError"></div>
+        </div>
+
+        <!-- 验证码输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-shield-alt input-icon"></i>
+            <span>验证码</span>
+          </label>
+          <div class="verification-inputs">
+            <input type="text" class="verification-input" maxlength="1" data-index="0">
+            <input type="text" class="verification-input" maxlength="1" data-index="1">
+            <input type="text" class="verification-input" maxlength="1" data-index="2">
+            <input type="text" class="verification-input" maxlength="1" data-index="3">
+            <input type="text" class="verification-input" maxlength="1" data-index="4">
+            <input type="text" class="verification-input" maxlength="1" data-index="5">
+          </div>
+          <div class="countdown-text" id="countdownText"></div>
+          <div class="error-msg" id="verificationError"></div>
+        </div>
+
+        <!-- 下一步按钮 -->
+        <button type="button" class="btn btn-primary" id="step1Next">
+          <span class="btn-text">下一步</span>
+          <span class="spinner" style="display: none;"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 步骤2：填写个人信息 -->
+    <div class="step-content" data-step="2">
+      <div class="form-section">
+        <!-- 头像上传 -->
+        <div class="avatar-upload-section">
+          <div class="avatar-upload" id="avatarUpload">
+            <img id="avatarPreview" src="" alt="" style="display: none;">
+            <div class="avatar-placeholder" id="avatarPlaceholder">
+              <i class="fas fa-camera"></i>
+              <span>上传头像</span>
+            </div>
+          </div>
+          <p class="optional-hint">（可选）</p>
+        </div>
+
+        <!-- 昵称输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-tag input-icon"></i>
+            <span>昵称</span>
+            <span class="optional-text">（可选）</span>
+          </label>
+          <input
+            type="text"
+            id="nickname"
+            class="input"
+            placeholder="请输入昵称"
+            maxlength="20"
+            autocomplete="nickname"
+          >
+          <div class="error-msg" id="nicknameError"></div>
+        </div>
+
+        <!-- 真实姓名输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-user input-icon"></i>
+            <span>真实姓名</span>
+            <span class="required-mark">*</span>
+          </label>
+          <input
+            type="text"
+            id="realName"
+            class="input"
+            placeholder="请输入真实姓名"
+            maxlength="10"
+            autocomplete="name"
+          >
+          <div class="error-msg" id="realNameError"></div>
+        </div>
+
+        <!-- 学号输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-graduation-cap input-icon"></i>
+            <span>学号</span>
+            <span class="required-mark">*</span>
+          </label>
+          <input
+            type="text"
+            id="registerStudentId"
+            class="input"
+            placeholder="请输入学号"
+            maxlength="12"
+            autocomplete="username"
+          >
+          <div class="error-msg" id="registerStudentIdError"></div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="button-group">
+          <button type="button" class="btn btn-secondary" id="step2Back">上一步</button>
+          <button type="button" class="btn btn-primary" id="step2Next">
+            <span class="btn-text">下一步</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤3：设置密码 -->
+    <div class="step-content" data-step="3">
+      <div class="form-section">
+        <!-- 设置密码 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-lock input-icon"></i>
+            <span>设置密码</span>
+            <span class="required-mark">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="registerPassword"
+              class="input"
+              placeholder="请设置密码"
+              maxlength="16"
+              autocomplete="new-password"
+            >
+            <button type="button" class="toggle-password" id="toggleRegisterPassword">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <!-- 密码强度 -->
+          <div class="password-strength" id="passwordStrength">
+            <div class="strength-dot" data-level="1"></div>
+            <div class="strength-dot" data-level="2"></div>
+            <div class="strength-dot" data-level="3"></div>
+            <div class="strength-dot" data-level="4"></div>
+            <div class="strength-dot" data-level="5"></div>
+          </div>
+          <div class="error-msg" id="registerPasswordError"></div>
+        </div>
+
+        <!-- 确认密码 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-lock input-icon"></i>
+            <span>确认密码</span>
+            <span class="required-mark">*</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="confirmPassword"
+              class="input"
+              placeholder="请再次输入密码"
+              maxlength="16"
+              autocomplete="new-password"
+            >
+            <button type="button" class="toggle-password" id="toggleConfirmPassword">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="error-msg" id="confirmPasswordError"></div>
+        </div>
+
+        <!-- 密码要求 -->
+        <div class="password-requirements">
+          <div class="requirement" data-requirement="length">
+            <i class="fas fa-circle requirement-icon"></i>
+            <span>密码长度不能少于8位</span>
+          </div>
+          <div class="requirement" data-requirement="letter">
+            <i class="fas fa-circle requirement-icon"></i>
+            <span>密码必须包含字母</span>
+          </div>
+          <div class="requirement" data-requirement="number">
+            <i class="fas fa-circle requirement-icon"></i>
+            <span>密码必须包含数字</span>
+          </div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="button-group">
+          <button type="button" class="btn btn-secondary" id="step3Back">上一步</button>
+          <button type="button" class="btn btn-primary" id="step3Complete">
+            <span class="btn-text">完成注册</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部链接 -->
+    <div class="footer-section">
+      <p class="register-link">
+        已有账户？
+        <a href="login.html" class="link link-primary">立即登录</a>
+      </p>
+    </div>
+  </div>
+
+  <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+
+  <script src="register.js"></script>
+</body>
+</html>

@@ -295,7 +295,7 @@ body {
 
 .register-link {
   font-size: var(--font-size-sm);
-  color: #FFFFFF;
+  color: var(--text-secondary);
   margin-bottom: var(--space-sm);
 }
 
@@ -342,6 +342,23 @@ body {
 
   .app-title {
     font-size: var(--font-size-xl);
+  }
+
+  .register-link {
+    color: #FFFFFF;
+  }
+
+  .link-primary:hover {
+    color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+  }
+
+  .link-secondary {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .link-secondary:hover {
+    color: #FFFFFF;
   }
 }
 
