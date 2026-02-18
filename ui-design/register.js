@@ -201,7 +201,7 @@ class RegisterHandler {
 
     // 验证验证码
     const code = Array.from(this.verificationInputs).map(input => input.value).join('');
-    if (code.length !== 6) {
+    if (code.length !== 5) {
       this.showInputError('verificationError', '请输入完整的验证码');
       return false;
     }

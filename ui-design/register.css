@@ -49,6 +49,21 @@
   margin-bottom: 40px;
 }
 
+/* 手机号输入框 wrapper - 特殊处理用于对齐验证码按钮 */
+#registerPhone + .input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#registerPhone + .input-wrapper input {
+  flex: 1;
+}
+
+#registerPhone + .input-wrapper .toggle-password {
+  display: none;
+}
+
 .step-dot {
   width: 12px;
   height: 12px;
@@ -122,7 +137,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .verification-btn:hover:not(:disabled) {
@@ -393,3 +408,17 @@
     background: #E0E0E0;
   }
 }
+
+/* 底部链接样式覆盖 */
+.register-link {
+  color: #34495E !important;
+}
+
+.link-primary {
+  color: #2ECC71 !important;
+}
+
+.link-secondary {
+  color: #7F8C8D !important;
+}
+
