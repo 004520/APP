@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>登录 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="login-container">
+    <!-- 顶部装饰区 -->
+    <div class="header-section">
+      <div class="cat-animation">
+        <img src="/images/cat.png" alt="小猫装饰" class="cat-image">
+      </div>
+      <h1 class="app-title">校园交换助手</h1>
+      <p class="app-subtitle">让闲置物品流动起来</p>
+    </div>
+
+    <!-- 登录表单 -->
+    <div class="form-section">
+      <form id="loginForm">
+        <!-- 手机号输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-mobile-alt input-icon"></i>
+            <span>手机号</span>
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            class="input"
+            placeholder="请输入手机号"
+            maxlength="11"
+            autocomplete="tel"
+          >
+          <div class="error-msg" id="phoneError"></div>
+        </div>
+
+        <!-- 密码输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-lock input-icon"></i>
+            <span>密码</span>
+          </label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="password"
+              class="input"
+              placeholder="请输入密码"
+              maxlength="16"
+              autocomplete="current-password"
+            >
+            <button type="button" class="toggle-password" id="togglePassword">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <div class="error-msg" id="passwordError"></div>
+        </div>
+
+        <!-- 学号输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-graduation-cap input-icon"></i>
+            <span>学号</span>
+          </label>
+          <input
+            type="text"
+            id="studentId"
+            class="input"
+            placeholder="请输入学号"
+            maxlength="12"
+            autocomplete="username"
+          >
+          <div class="error-msg" id="studentIdError"></div>
+        </div>
+
+        <!-- 登录按钮 -->
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <span class="btn-text">登 录</span>
+          <span class="spinner" style="display: none;"></span>
+        </button>
+      </form>
+    </div>
+
+    <!-- 底部链接 -->
+    <div class="footer-section">
+      <p class="register-link">
+        还没有账户？
+        <a href="#" class="link link-primary">点击注册</a>
+      </p>
+      <a href="#" class="link link-secondary">忘记密码？</a>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
