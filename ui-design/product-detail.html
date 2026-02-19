@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>商品详情 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="main-menu.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="selling.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@8.10.3/dist/cloudbase.full.js"></script>
+  <script src="js/cloudbase-config.js"></script>
+  <script src="js/cloudbase.js"></script>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <div class="page-header">
+    <button class="btn-back" onclick="window.location.href='main-menu.html'">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1 class="page-title">商品详情</h1>
+    <button class="btn-share" onclick="handleShare()">
+      <i class="fas fa-share-alt"></i>
+    </button>
+  </div>
+
+  <!-- 商品图片轮播 -->
+  <div class="product-image-slider" id="imageSlider">
+    <div class="slider-wrapper" id="sliderWrapper">
+      <div class="slider-item">
+        <i class="fas fa-image"></i>
+      </div>
+    </div>
+    <div class="slider-indicators" id="sliderIndicators">
+      <span class="indicator active"></span>
+    </div>
+  </div>
+
+  <!-- 商品信息 -->
+  <div class="product-info-section">
+    <div class="product-price-section">
+      <div class="product-price" id="productPrice">¥0.00</div>
+      <div class="product-status" id="productStatus">在售</div>
+    </div>
+    <h1 class="product-title" id="productTitle">商品标题</h1>
+    <div class="product-meta">
+      <div class="product-condition" id="productCondition">全新</div>
+      <div class="product-time" id="productTime">刚刚</div>
+    </div>
+  </div>
+
+  <!-- 卖家信息 -->
+  <div class="seller-section">
+    <div class="seller-header">
+      <div class="seller-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="seller-info">
+        <div class="seller-name" id="sellerName">卖家</div>
+        <div class="seller-reputation">
+          <i class="fas fa-star"></i>
+          <span>信用良好</span>
+        </div>
+      </div>
+      <button class="btn-contact" onclick="handleContact()">
+        <i class="fas fa-comment"></i>
+        <span>联系</span>
+      </button>
+    </div>
+    <div class="seller-location" id="sellerLocation">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>校内交易</span>
+    </div>
+  </div>
+
+  <!-- 商品描述 -->
+  <div class="product-description-section">
+    <h3 class="section-title">商品描述</h3>
+    <div class="description-content" id="productDescription">
+      商品详细描述
+    </div>
+  </div>
+
+  <!-- 底部操作栏 -->
+  <div class="product-footer">
+    <button class="btn btn-secondary" onclick="handleAddToCart()">
+      <i class="fas fa-shopping-cart"></i>
+      <span>加入购物车</span>
+    </button>
+    <button class="btn btn-primary" onclick="handleBuyNow()">
+      <span>立即购买</span>
+    </button>
+  </div>
+
+  <!-- 联系卖家弹窗 -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>联系卖家</h2>
+        <button class="btn-close" onclick="hideContactModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-user"></i>
+            <span id="contactName">卖家</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <span id="contactPhone">联系电话</span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="contactAddress">交易地点</span>
+          </div>
+        </div>
+        <div class="message-input-section">
+          <label class="form-label">发送消息</label>
+          <textarea class="form-textarea" id="messageText" placeholder="想问点什么..." maxlength="200"></textarea>
+          <div class="char-count"><span id="msgCount">0</span>/200</div>
+          <button class="btn btn-primary" onclick="handleSendMessage()">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="product-detail.js"></script>
+</body>
+</html>

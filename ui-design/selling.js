@@ -57,7 +57,7 @@ class SellingHandler {
     emptyState.style.display = 'none';
 
     const itemsHtml = this.products.map(product => `
-      <div class="product-card" data-id="${product.id}">
+      <div class="product-card" data-id="${product._id || product.id}" onclick="window.sellingHandler.handleProductClick('${product._id || product.id}')">
         <div class="product-images">
           ${product.images && product.images.length > 0
             ? product.images.map(img => `
@@ -71,13 +71,23 @@ class SellingHandler {
         <div class="product-info">
           <h3 class="product-title">${product.title}</h3>
           <div class="product-price">
-            <span>¥</span>${product.price.toFixed(2)}
+            <span>¥</span>${parseFloat(product.price).toFixed(2)}
           </div>
           <div class="product-meta">
             <span>${this.formatCondition(product.condition)}</span>
             <span class="product-status ${product.status === 'sold' ? 'sold' : ''}">
               ${this.formatStatus(product.status)}
             </span>
+          </div>
+          <div class="product-actions">
+            <button class="btn-action" onclick="event.stopPropagation(); window.sellingHandler.editProduct('${product._id || product.id}')">
+              <i class="fas fa-edit"></i>
+              <span>编辑</span>
+            </button>
+            <button class="btn-action btn-delete" onclick="event.stopPropagation(); window.sellingHandler.offlineProduct('${product._id || product.id}')">
+              <i class="fas fa-times"></i>
+              <span>下架</span>
+            </button>
           </div>
         </div>
       </div>
@@ -254,50 +264,99 @@ class SellingHandler {
         throw new Error('图片上传失败');
       }
 
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 创建商品中...';
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 保存中...';
 
-      // 调用CloudBase云函数创建商品
-      const createResult = await CloudBaseHelper.callFunction('createProduct', {
-        title,
-        price,
-        images: imageUrls,
-        description,
-        condition
-      });
-
-      if (createResult.success) {
-        // 添加到本地列表
-        const product = createResult.data || {
-          _id: Date.now().toString(),
+      // 判断是新建还是编辑
+      if (this.editingProductId) {
+        // 编辑商品
+        const updateResult = await CloudBaseHelper.callFunction('updateProduct', {
+          productId: this.editingProductId,
           title,
           price,
           images: imageUrls,
           description,
-          condition,
-          status: 'selling',
-          createdAt: new Date().toISOString()
-        };
-        this.products.unshift(product);
+          condition
+        });
 
-        // 清空表单
-        this.resetForm();
+        if (updateResult.success) {
+          // 更新本地列表
+          const index = this.products.findIndex(p => (p._id || p.id) === this.editingProductId);
+          if (index !== -1) {
+            this.products[index] = {
+              ...this.products[index],
+              title,
+              price,
+              images: imageUrls,
+              description,
+              condition
+            };
+          }
 
-        // 关闭弹窗
-        this.hideAddProductModal();
-
-        this.showToast('商品发布成功');
+          this.renderProducts();
+          this.resetForm();
+          this.hideAddProductModal();
+          this.showToast('商品更新成功');
+        } else {
+          this.showToast(updateResult.message || '更新失败,请重试');
+        }
       } else {
-        this.showToast(createResult.message || '发布失败,请重试');
+        // 新建商品
+        const createResult = await CloudBaseHelper.callFunction('createProduct', {
+          title,
+          price,
+          images: imageUrls,
+          description,
+          condition
+        });
+
+        if (createResult.success) {
+          // 添加到本地列表
+          const product = createResult.data || {
+            _id: Date.now().toString(),
+            title,
+            price,
+            images: imageUrls,
+            description,
+            condition,
+            status: 'selling',
+            createdAt: new Date().toISOString()
+          };
+          this.products.unshift(product);
+
+          this.renderProducts();
+          this.resetForm();
+          this.hideAddProductModal();
+          this.showToast('商品发布成功');
+        } else {
+          this.showToast(createResult.message || '发布失败,请重试');
+        }
       }
     } catch (error) {
-      console.error('发布失败:', error);
-      this.showToast('发布失败,请检查网络连接');
+      console.error('保存失败:', error);
+      this.showToast('保存失败,请检查网络连接');
     } finally {
       // 恢复按钮状态
       const submitBtn = document.querySelector('.modal-footer .btn-primary');
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '发布';
+      submitBtn.innerHTML = this.editingProductId ? '更新' : '发布';
     }
+  }
+
+  // 重置编辑状态
+  resetEditState() {
+    this.editingProductId = null;
+  }
+
+  // 在显示弹窗时重置编辑状态
+  showAddProductModal() {
+    this.resetEditState();
+
+    const modal = document.getElementById('addProductModal');
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+
+    // 重置标题
+    document.getElementById('modalTitle').textContent = '添加商品';
   }
 
   // 重置表单
@@ -322,6 +381,60 @@ class SellingHandler {
     modal.classList.remove('show');
     document.body.style.overflow = '';
     this.resetForm();
+  }
+
+  // 处理商品点击
+  handleProductClick(productId) {
+    window.location.href = `product-detail.html?id=${productId}`;
+  }
+
+  // 编辑商品
+  editProduct(productId) {
+    const product = this.products.find(p => (p._id || p.id) === productId);
+    if (product) {
+      // 填充表单
+      document.getElementById('productTitle').value = product.title || '';
+      document.getElementById('productPrice').value = product.price || '';
+      document.getElementById('productDescription').value = product.description || '';
+
+      // 设置成色
+      const conditionRadio = document.querySelector(`input[name="condition"][value="${product.condition}"]`);
+      if (conditionRadio) conditionRadio.checked = true;
+
+      // 更新标题
+      document.getElementById('modalTitle').textContent = '编辑商品';
+
+      // 设置编辑状态
+      this.editingProductId = productId;
+
+      // 显示弹窗
+      this.showAddProductModal();
+    }
+  }
+
+  // 下架商品
+  async offlineProduct(productId) {
+    if (!confirm('确定要下架此商品吗？')) {
+      return;
+    }
+
+    try {
+      const result = await CloudBaseHelper.callFunction('updateProduct', {
+        productId: productId,
+        status: 'sold'
+      });
+
+      if (result.success) {
+        showToast('商品已下架');
+        await this.loadProducts();
+        this.renderProducts();
+      } else {
+        showToast(result.message || '操作失败');
+      }
+    } catch (error) {
+      console.error('下架失败:', error);
+      showToast('网络错误，请重试');
+    }
   }
 
   // 显示提示
@@ -384,6 +497,38 @@ style.textContent = `
   @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
+  }
+  .product-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .btn-action {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.3s;
+  }
+  .btn-action {
+    background: #F5F5F5;
+    color: #666666;
+  }
+  .btn-action:active {
+    background: #E0E0E0;
+  }
+  .btn-delete {
+    background: #FFF1F0;
+    color: #FF6B6B;
+  }
+  .btn-delete:active {
+    background: #FFE0E0;
   }
 `;
 document.head.appendChild(style);

@@ -62,7 +62,7 @@ class MainMenuHandler {
     emptyState.style.display = 'none';
 
     const itemsHtml = this.products.map(product => `
-      <div class="product-item" data-id="${product._id}">
+      <div class="product-item" data-id="${product._id}" onclick="window.mainMenuHandler.handleProductClick('${product._id}')">
         <div class="product-image">
           ${product.images && product.images.length > 0
             ? `<img src="${product.images[0]}" alt="${product.title}">`
@@ -84,6 +84,11 @@ class MainMenuHandler {
     `).join('');
 
     productList.innerHTML = itemsHtml;
+  }
+
+  // 处理商品点击
+  handleProductClick(productId) {
+    window.location.href = `product-detail.html?id=${productId}`;
   }
 
   // 格式化成色
@@ -186,6 +191,11 @@ class MainMenuHandler {
     productList.innerHTML = itemsHtml;
   }
 
+  // 处理商品点击
+  handleProductClick(productId) {
+    window.location.href = `product-detail.html?id=${productId}`;
+  }
+
   // 处理搜索
   handleSearch() {
     const keyword = this.searchInput.value.trim();
@@ -213,7 +223,7 @@ class MainMenuHandler {
     emptyState.style.display = 'none';
 
     const itemsHtml = filtered.map(product => `
-      <div class="product-item" data-id="${product._id}">
+      <div class="product-item" data-id="${product._id}" onclick="window.mainMenuHandler.handleProductClick('${product._id}')">
         <div class="product-image">
           ${product.images && product.images.length > 0
             ? `<img src="${product.images[0]}" alt="${product.title}">`

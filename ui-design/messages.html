@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>消息 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="main-menu.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@8.10.3/dist/cloudbase.full.js"></script>
+  <script src="js/cloudbase-config.js"></script>
+  <script src="js/cloudbase.js"></script>
+</head>
+<body>
+  <!-- 顶部标题栏 -->
+  <div class="page-header">
+    <h1 class="page-title">消息</h1>
+  </div>
+
+  <!-- 消息列表 -->
+  <div class="message-list" id="messageList">
+    <div class="empty-state">
+      <h3 class="empty-title">暂无消息</h3>
+    </div>
+  </div>
+
+  <!-- 底部导航栏 -->
+  <nav class="bottom-nav">
+    <div class="nav-item" data-tab="mall" onclick="window.location.href='main-menu.html'">
+      <i class="fas fa-home"></i>
+      <span>商城</span>
+      <div class="nav-indicator"></div>
+    </div>
+    <div class="nav-item" data-tab="selling" onclick="window.location.href='selling.html'">
+      <i class="fas fa-box"></i>
+      <span>在售</span>
+      <div class="nav-indicator"></div>
+    </div>
+    <div class="nav-item" data-tab="todo" onclick="window.location.href='todo.html'">
+      <i class="fas fa-list-check"></i>
+      <span>待办</span>
+      <div class="nav-indicator"></div>
+    </div>
+    <div class="nav-item active" data-tab="settings">
+      <i class="fas fa-cog"></i>
+      <span>设置</span>
+      <div class="nav-indicator"></div>
+    </div>
+  </nav>
+
+  <script src="messages.js"></script>
+</body>
+</html>
