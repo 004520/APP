@@ -128,3 +128,45 @@
 - 前后端集成
 
 ---
+
+### v1.5
+**分支**: feature/login-ui
+**日期**: 2026-02-19
+**描述**: CloudBase云端开发完成
+
+**实现功能**:
+- CloudBase环境连接成功
+- 环境ID：app004520-2gnr9yy23c0f3ed9
+- 数据库集合创建（users、products、orders、messages）
+- 数据库索引配置
+- 数据库安全规则配置
+- 云函数开发与部署（8个函数）：
+  - login（用户登录）
+  - register（用户注册）
+  - createProduct（创建商品）
+  - updateProduct（更新商品）
+  - createOrder（创建订单）
+  - confirmOrder（确认订单）
+  - sendMessage（发送消息）
+  - uploadImage（上传图片）
+
+**CloudBase配置**:
+- 数据库实例：tnt-7knxdp69q
+- 云存储Bucket：6170-app004520-2gnr9yy23c0f3ed9-1398550543
+- CDN域名：6170-app004520-2gnr9yy23c0f3ed9-1398550543.tcb.qcloud.la
+- 静态托管域名：app004520-2gnr9yy23c0f3ed9-1398550543.tcloudbaseapp.com
+- 运行环境：Node.js 18.15
+
+**技术实现**:
+- NoSQL数据库配置
+- 云函数开发（Node.js）
+- 数据库安全规则配置
+- 云存储集成
+
+**下一步**:
+- 前端CloudBase SDK集成
+- 前后端API对接
+- 静态网站托管部署
+- 完整流程测试
+
+---
