@@ -171,6 +171,46 @@
 
 ---
 
+### v1.7
+**分支**: feature/login-ui
+**日期**: 2026-02-19
+**描述**: CloudBase SDK集成（第二阶段完成）
+
+**实现功能**:
+- 主菜单页面集成CloudBase SDK
+- 在售页面集成CloudBase SDK
+- 购物车页面集成CloudBase SDK
+- 个人资料页面集成CloudBase SDK
+- 商品列表从CloudBase数据库加载
+- 商品发布对接createProduct云函数
+- 商品图片上传对接uploadImage云函数
+- 购物车结算对接createOrder云函数
+- 个人资料保存对接数据库更新
+
+**已对接云函数**:
+- login（用户登录）✓
+- register（用户注册）✓
+- createProduct（创建商品）✓
+- updateProduct（更新商品）- 待对接
+- createOrder（创建订单）✓
+- confirmOrder（确认订单）- 待对接
+- sendMessage（发送消息）- 待对接
+- uploadImage（上传图片）✓
+
+**数据库操作**:
+- products集合：查询、创建
+- users集合：更新
+- orders集合：创建
+
+**下一步**:
+- 待办页面集成订单管理
+- 消息页面集成消息系统
+- 设置页面完善用户信息加载
+- 全部页面统一用户状态检查
+- 静态网站托管部署
+
+---
+
 ### v1.6
 **分支**: feature/login-ui
 **日期**: 2026-02-19

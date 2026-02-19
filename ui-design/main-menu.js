@@ -4,6 +4,7 @@ class MainMenuHandler {
   constructor() {
     // 当前选中的分类
     this.currentCategory = 'all';
+    this.products = [];
 
     // 获取 DOM 元素
     this.categoryTabs = document.querySelectorAll('.category-tab');
@@ -15,11 +16,85 @@ class MainMenuHandler {
     this.init();
   }
 
-  init() {
+  async init() {
     // 绑定事件
     this.bindEvents();
     // 更新购物车角标
     this.updateCartBadge();
+    // 加载商品数据
+    await this.loadProducts();
+    // 渲染商品列表
+    this.renderProducts();
+  }
+
+  // 加载商品数据
+  async loadProducts() {
+    try {
+      // 查询所有在售商品
+      const result = await CloudBaseHelper.queryCollection('products', {
+        where: { status: 'selling' }
+      });
+
+      if (result.success) {
+        this.products = result.data || [];
+      } else {
+        console.error('加载商品失败:', result.message);
+        this.products = [];
+      }
+    } catch (error) {
+      console.error('加载商品失败:', error);
+      this.products = [];
+    }
+  }
+
+  // 渲染商品列表
+  renderProducts() {
+    const productList = document.querySelector('.product-list');
+    const emptyState = document.querySelector('.empty-state');
+
+    if (!productList) return;
+
+    if (this.products.length === 0) {
+      emptyState.style.display = 'flex';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    const itemsHtml = this.products.map(product => `
+      <div class="product-item" data-id="${product._id}">
+        <div class="product-image">
+          ${product.images && product.images.length > 0
+            ? `<img src="${product.images[0]}" alt="${product.title}">`
+            : '<i class="fas fa-image"></i>'
+          }
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${product.title}</h3>
+          <div class="product-price">¥${parseFloat(product.price).toFixed(2)}</div>
+          <div class="product-meta">
+            <span class="product-seller">
+              <i class="fas fa-user"></i>
+              ${product.sellerName || '匿名'}
+            </span>
+            <span class="product-condition">${this.formatCondition(product.condition)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    productList.innerHTML = itemsHtml;
+  }
+
+  // 格式化成色
+  formatCondition(condition) {
+    const map = {
+      'new': '全新',
+      'like_new': '几乎全新',
+      'good': '轻微使用',
+      'fair': '明显使用痕迹'
+    };
+    return map[condition] || condition;
   }
 
   // 更新购物车角标
@@ -67,22 +142,99 @@ class MainMenuHandler {
 
   // 过滤商品
   filterProducts(category) {
-    // 这里可以添加实际的过滤逻辑
-    console.log('过滤分类:', category);
+    let filtered = this.products;
 
-    // 模拟加载效果
-    this.productList.style.opacity = '0.5';
-    setTimeout(() => {
-      this.productList.style.opacity = '1';
-    }, 300);
+    if (category !== 'all') {
+      filtered = this.products.filter(p => p.category === category);
+    }
+
+    const productList = document.querySelector('.product-list');
+    const emptyState = document.querySelector('.empty-state');
+
+    if (!productList) return;
+
+    if (filtered.length === 0) {
+      productList.innerHTML = '';
+      emptyState.style.display = 'flex';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    const itemsHtml = filtered.map(product => `
+      <div class="product-item" data-id="${product._id}">
+        <div class="product-image">
+          ${product.images && product.images.length > 0
+            ? `<img src="${product.images[0]}" alt="${product.title}">`
+            : '<i class="fas fa-image"></i>'
+          }
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${product.title}</h3>
+          <div class="product-price">¥${parseFloat(product.price).toFixed(2)}</div>
+          <div class="product-meta">
+            <span class="product-seller">
+              <i class="fas fa-user"></i>
+              ${product.sellerName || '匿名'}
+            </span>
+            <span class="product-condition">${this.formatCondition(product.condition)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    productList.innerHTML = itemsHtml;
   }
 
   // 处理搜索
   handleSearch() {
     const keyword = this.searchInput.value.trim();
-    console.log('搜索关键词:', keyword);
+    const productList = document.querySelector('.product-list');
+    const emptyState = document.querySelector('.empty-state');
 
-    // 这里可以添加实际的搜索逻辑
+    if (!keyword) {
+      this.renderProducts();
+      return;
+    }
+
+    const filtered = this.products.filter(p => {
+      return p.title.toLowerCase().includes(keyword.toLowerCase()) ||
+             p.description.toLowerCase().includes(keyword.toLowerCase());
+    });
+
+    if (!productList) return;
+
+    if (filtered.length === 0) {
+      productList.innerHTML = '';
+      emptyState.style.display = 'flex';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    const itemsHtml = filtered.map(product => `
+      <div class="product-item" data-id="${product._id}">
+        <div class="product-image">
+          ${product.images && product.images.length > 0
+            ? `<img src="${product.images[0]}" alt="${product.title}">`
+            : '<i class="fas fa-image"></i>'
+          }
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${product.title}</h3>
+          <div class="product-price">¥${parseFloat(product.price).toFixed(2)}</div>
+          <div class="product-meta">
+            <span class="product-seller">
+              <i class="fas fa-user"></i>
+              ${product.sellerName || '匿名'}
+            </span>
+            <span class="product-condition">${this.formatCondition(product.condition)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    productList.innerHTML = itemsHtml;
   }
 
   // 处理导航栏切换

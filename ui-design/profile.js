@@ -108,38 +108,41 @@ class ProfileHandler {
       bio: bio.value.trim()
     };
 
-    console.log('保存的数据:', profileData);
-
     // 发送保存请求
     this.saveBtn.disabled = true;
     this.saveBtn.textContent = '保存中...';
 
     try {
-      const response = await fetch('/api/user/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData),
-      });
+      // 保存到CloudBase数据库
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo && userInfo.openid) {
+        const result = await CloudBaseHelper.updateDocument('users', userInfo.openid, profileData);
 
-      const result = await response.json();
+        this.saveBtn.disabled = false;
+        this.saveBtn.textContent = '保存';
 
-      this.saveBtn.disabled = false;
-      this.saveBtn.textContent = '保存';
+        if (result.success) {
+          // 保存成功，保存到本地存储
+          localStorage.setItem('userProfile', JSON.stringify(profileData));
+          this.showToast('保存成功');
 
-      if (result.success) {
-        // 保存成功，保存到本地存储
+          // 保存成功后返回设置界面
+          setTimeout(() => {
+            window.location.href = 'settings.html';
+          }, 500);
+        } else {
+          this.showToast(result.message || '保存失败');
+        }
+      } else {
+        // 未登录，只保存到本地
         localStorage.setItem('userProfile', JSON.stringify(profileData));
-        this.showToast('保存成功');
+        this.saveBtn.disabled = false;
+        this.saveBtn.textContent = '保存';
+        this.showToast('已保存到本地');
 
-        // 保存成功后返回设置界面
         setTimeout(() => {
           window.location.href = 'settings.html';
         }, 500);
-      } else {
-        // 保存失败
-        this.showToast(result.message || '保存失败');
       }
     } catch (error) {
       console.error('保存失败:', error);

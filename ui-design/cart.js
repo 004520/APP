@@ -206,22 +206,15 @@ class CartHandler {
       checkoutBtn.disabled = true;
       checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-      // 调用后端API创建订单
-      const response = await fetch('/api/order/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          items: selectedItems.map(item => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price
-          }))
-        })
+      // 调用CloudBase云函数创建订单
+      const result = await CloudBaseHelper.callFunction('createOrder', {
+        items: selectedItems.map(item => ({
+          productId: item.productId,
+          sellerId: item.sellerId,
+          quantity: item.quantity,
+          price: item.price
+        }))
       });
-
-      const result = await response.json();
 
       if (result.success) {
         this.showToast('下单成功');
@@ -232,7 +225,7 @@ class CartHandler {
 
         // 跳转到订单页面
         setTimeout(() => {
-          window.location.href = 'orders.html';
+          window.location.href = 'todo.html';
         }, 1500);
       } else {
         this.showToast(result.message || '下单失败，请重试');

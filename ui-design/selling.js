@@ -7,9 +7,9 @@ class SellingHandler {
     this.init();
   }
 
-  init() {
-    // 从本地存储加载商品数据
-    this.loadProducts();
+  async init() {
+    // 从CloudBase加载商品数据
+    await this.loadProducts();
     // 渲染商品列表
     this.renderProducts();
     // 绑定输入事件
@@ -17,19 +17,31 @@ class SellingHandler {
   }
 
   // 加载商品
-  loadProducts() {
-    const saved = localStorage.getItem('myProducts');
-    if (saved) {
-      this.products = JSON.parse(saved);
-    } else {
-      // 模拟初始数据
-      this.products = [];
-    }
-  }
+  async loadProducts() {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (!userInfo || !userInfo.openid) {
+        console.log('用户未登录');
+        this.products = [];
+        return;
+      }
 
-  // 保存商品
-  saveProducts() {
-    localStorage.setItem('myProducts', JSON.stringify(this.products));
+      const result = await CloudBaseHelper.queryCollection('products', {
+        where: { sellerId: userInfo.openid }
+      });
+
+      if (result.success) {
+        this.products = result.data || [];
+      } else {
+        console.error('加载商品失败:', result.message);
+        this.products = [];
+      }
+    } catch (error) {
+      console.error('加载商品失败:', error);
+      // 降级到本地存储
+      const saved = localStorage.getItem('myProducts');
+      this.products = saved ? JSON.parse(saved) : [];
+    }
   }
 
   // 渲染商品列表
@@ -222,36 +234,50 @@ class SellingHandler {
       const submitBtn = document.querySelector('.modal-footer .btn-primary');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发布中...';
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上传中...';
 
-      // 创建商品对象
-      const product = {
-        id: Date.now().toString(),
+      // 上传图片
+      const imageUrls = [];
+      for (const imgData of this.uploadedImages) {
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上传图片中...';
+        const uploadResult = await CloudBaseHelper.callFunction('uploadImage', {
+          file: imgData,
+          category: 'product'
+        });
+        if (uploadResult.success && uploadResult.imageUrl) {
+          imageUrls.push(uploadResult.imageUrl);
+        }
+      }
+
+      if (imageUrls.length === 0) {
+        this.showToast('图片上传失败,请重试');
+        throw new Error('图片上传失败');
+      }
+
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 创建商品中...';
+
+      // 调用CloudBase云函数创建商品
+      const createResult = await CloudBaseHelper.callFunction('createProduct', {
         title,
         price,
-        images: [...this.uploadedImages],
+        images: imageUrls,
         description,
-        condition,
-        status: 'selling',
-        createdAt: new Date().toISOString()
-      };
-
-      // 调用后端API
-      const response = await fetch('/api/product/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
+        condition
       });
 
-      const result = await response.json();
-
-      if (result.success) {
+      if (createResult.success) {
         // 添加到本地列表
+        const product = createResult.data || {
+          _id: Date.now().toString(),
+          title,
+          price,
+          images: imageUrls,
+          description,
+          condition,
+          status: 'selling',
+          createdAt: new Date().toISOString()
+        };
         this.products.unshift(product);
-        this.saveProducts();
-        this.renderProducts();
 
         // 清空表单
         this.resetForm();
@@ -261,29 +287,11 @@ class SellingHandler {
 
         this.showToast('商品发布成功');
       } else {
-        this.showToast(result.message || '发布失败,请重试');
+        this.showToast(createResult.message || '发布失败,请重试');
       }
     } catch (error) {
       console.error('发布失败:', error);
-
-      // 模拟发布成功(演示用)
-      const product = {
-        id: Date.now().toString(),
-        title,
-        price,
-        images: [...this.uploadedImages],
-        description,
-        condition,
-        status: 'selling',
-        createdAt: new Date().toISOString()
-      };
-
-      this.products.unshift(product);
-      this.saveProducts();
-      this.renderProducts();
-      this.resetForm();
-      this.hideAddProductModal();
-      this.showToast('商品发布成功');
+      this.showToast('发布失败,请检查网络连接');
     } finally {
       // 恢复按钮状态
       const submitBtn = document.querySelector('.modal-footer .btn-primary');
