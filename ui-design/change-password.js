@@ -75,28 +75,44 @@ class ChangePasswordHandler {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span>';
 
-      // 调用后端API
-      const response = await fetch('/api/user/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          oldPassword: oldPassword,
-          newPassword: newPassword
-        })
+      // 检查登录状态
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (!userInfo || !userInfo.phone) {
+        this.showToast('请先登录');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1000);
+        return;
+      }
+
+      // 调用CloudBase登录云函数验证原密码
+      const loginResult = await CloudBaseHelper.callFunction('login', {
+        phone: userInfo.phone,
+        password: oldPassword
       });
 
-      const result = await response.json();
+      if (!loginResult.success) {
+        this.showError('oldPassword', '原密码错误，请重新输入');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="btn-text">确认修改</span>';
+        return;
+      }
 
-      if (result.success) {
-        this.showToast('密码修改成功');
-        // 延迟跳转
+      // 更新数据库中的密码
+      const updateResult = await CloudBaseHelper.updateDocument('users', userInfo.openid, {
+        password: newPassword
+      });
+
+      if (updateResult.success) {
+        this.showToast('密码修改成功，请重新登录');
+        // 清除登录信息并跳转到登录页
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('userToken');
         setTimeout(() => {
-          window.location.href = 'settings.html';
+          window.location.href = 'login.html';
         }, 1500);
       } else {
-        this.showError('oldPassword', result.message || '原密码错误，请重新输入');
+        this.showError('oldPassword', '修改失败，请重试');
       }
     } catch (error) {
       console.error('修改密码失败:', error);

@@ -9,6 +9,16 @@ class ChangePhoneHandler {
   }
 
   init() {
+    // 加载用户手机号
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo && userInfo.phone) {
+      const phoneDisplay = document.querySelector('.current-phone-info span');
+      if (phoneDisplay) {
+        const maskedPhone = userInfo.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+        phoneDisplay.textContent = `当前绑定手机号: ${maskedPhone}`;
+      }
+    }
+
     // 清除错误提示
     document.querySelectorAll('.input').forEach(input => {
       input.addEventListener('input', () => {
@@ -112,6 +122,7 @@ async function sendVerifyCode(step) {
 
   try {
     // 验证手机号(步骤2需要)
+    let phone = null;
     if (step === 2) {
       const newPhone = document.getElementById('newPhone').value;
       const phoneRegex = /^1[3-9]\d{9}$/;
@@ -125,46 +136,35 @@ async function sendVerifyCode(step) {
         handler.showError('newPhone', '请输入正确的手机号');
         return;
       }
+      phone = newPhone;
+    } else {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      phone = userInfo ? userInfo.phone : null;
     }
 
     // 显示加载状态
     btn.disabled = true;
     btn.textContent = '发送中...';
 
-    // 调用后端API
-    const response = await fetch('/api/sms/send-code', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        type: step === 1 ? 'change_phone_verify' : 'change_phone_bind',
-        phone: step === 1 ? null : document.getElementById('newPhone').value
-      })
-    });
+    // 模拟发送验证码（实际应对接短信服务）
+    // 这里使用CloudBase云函数或直接发送
+    // 暂时使用固定验证码123456用于测试
+    console.log('发送验证码到:', phone);
 
-    const result = await response.json();
+    handler.showToast('验证码已发送（测试码：123456）');
 
-    if (result.success) {
-      handler.showToast('验证码已发送');
+    // 开始倒计时
+    handler.countdown = 60;
+    handler.timer = setInterval(() => {
+      handler.countdown--;
+      btn.textContent = `${handler.countdown}秒后重新发送`;
 
-      // 开始倒计时
-      handler.countdown = 60;
-      handler.timer = setInterval(() => {
-        handler.countdown--;
-        btn.textContent = `${handler.countdown}秒后重新发送`;
-
-        if (handler.countdown <= 0) {
-          clearInterval(handler.timer);
-          btn.disabled = false;
-          btn.textContent = '获取验证码';
-        }
-      }, 1000);
-    } else {
-      handler.showToast(result.message || '发送失败，请重试');
-      btn.disabled = false;
-      btn.textContent = '获取验证码';
-    }
+      if (handler.countdown <= 0) {
+        clearInterval(handler.timer);
+        btn.disabled = false;
+        btn.textContent = '获取验证码';
+      }
+    }, 1000);
   } catch (error) {
     console.error('发送验证码失败:', error);
     handler.showToast('网络错误，请稍后重试');
@@ -199,25 +199,12 @@ async function verifyOldPhone() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
 
-    // 调用后端API验证
-    const response = await fetch('/api/user/verify-phone', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        verifyCode: verifyCode
-      })
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
+    // 模拟验证（测试环境使用固定验证码）
+    if (verifyCode === '123456') {
       handler.showToast('验证成功');
-      // 切换到步骤2
       handler.switchStep(2);
     } else {
-      handler.showError('verifyCode1', result.message || '验证码错误，请重新输入');
+      handler.showError('verifyCode1', '验证码错误，请重新输入');
     }
   } catch (error) {
     console.error('验证失败:', error);
@@ -269,28 +256,34 @@ async function bindNewPhone() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span>';
 
-    // 调用后端API绑定
-    const response = await fetch('/api/user/change-phone', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        newPhone: newPhone,
-        verifyCode: verifyCode
-      })
-    });
+    // 模拟验证（测试环境使用固定验证码）
+    if (verifyCode === '123456') {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo && userInfo.openid) {
+        const result = await CloudBaseHelper.updateDocument('users', userInfo.openid, {
+          phone: newPhone
+        });
 
-    const result = await response.json();
+        if (result.success) {
+          // 更新本地存储
+          userInfo.phone = newPhone;
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-    if (result.success) {
-      handler.showToast('手机号修改成功');
-      // 延迟跳转
-      setTimeout(() => {
-        window.location.href = 'settings.html';
-      }, 1500);
+          handler.showToast('手机号修改成功');
+          setTimeout(() => {
+            window.location.href = 'settings.html';
+          }, 1500);
+        } else {
+          handler.showError('verifyCode2', '修改失败，请重试');
+        }
+      } else {
+        handler.showToast('请先登录');
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1000);
+      }
     } else {
-      handler.showError('verifyCode2', result.message || '验证码错误，请重新输入');
+      handler.showError('verifyCode2', '验证码错误，请重新输入');
     }
   } catch (error) {
     console.error('绑定失败:', error);
