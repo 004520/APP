@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>地址 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="settings.css">
+  <link rel="stylesheet" href="address.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <div class="page-header">
+    <button class="btn-back" onclick="window.location.href='settings.html'">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1 class="page-title">地址</h1>
+    <button class="btn-add" onclick="showAddressModal()">
+      <i class="fas fa-plus"></i>
+      <span>添加</span>
+    </button>
+  </div>
+
+  <!-- Tab 切换 -->
+  <div class="tab-container">
+    <div class="tab-item active" data-type="trading">
+      <span>交易地址</span>
+      <div class="tab-indicator"></div>
+    </div>
+    <div class="tab-item" data-type="delivery">
+      <span>收货地址</span>
+      <div class="tab-indicator"></div>
+    </div>
+  </div>
+
+  <!-- 地址列表 -->
+  <div class="address-list" id="addressList">
+    <!-- 交易地址列表 -->
+    <div class="address-section trading-section">
+      <div class="empty-state">
+        <h3 class="empty-title">暂无交易地址</h3>
+        <p class="empty-desc">点击右上角"添加"按钮添加新地址</p>
+      </div>
+    </div>
+
+    <!-- 收货地址列表 -->
+    <div class="address-section delivery-section" style="display: none;">
+      <div class="empty-state">
+        <h3 class="empty-title">暂无收货地址</h3>
+        <p class="empty-desc">点击右上角"添加"按钮添加新地址</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑地址弹窗 -->
+  <div class="modal" id="addressModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">添加地址</h2>
+        <button class="modal-close" onclick="hideAddressModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="addressForm">
+          <!-- 地址类型 -->
+          <div class="form-group">
+            <label class="form-label">地址类型 <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="addressType" value="trading">
+                <span class="radio-text">交易地址</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="addressType" value="delivery">
+                <span class="radio-text">收货地址</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 收货人 -->
+          <div class="form-group delivery-only">
+            <label class="form-label">收货人 <span class="required">*</span></label>
+            <div class="form-input-wrapper">
+              <input type="text" class="form-input" id="receiverName" placeholder="请输入收货人姓名" maxlength="10">
+            </div>
+          </div>
+
+          <!-- 联系电话 -->
+          <div class="form-group delivery-only">
+            <label class="form-label">联系电话 <span class="required">*</span></label>
+            <div class="form-input-wrapper">
+              <input type="tel" class="form-input" id="receiverPhone" placeholder="请输入联系电话" maxlength="11">
+            </div>
+          </div>
+
+          <!-- 详细地址 -->
+          <div class="form-group">
+            <label class="form-label">详细地址 <span class="required">*</span></label>
+            <textarea class="form-textarea" id="detailAddress" placeholder="请输入详细地址，如：XX宿舍楼X层XXX室" maxlength="200"></textarea>
+          </div>
+
+          <!-- 设为默认地址 -->
+          <div class="form-group delivery-only">
+            <label class="checkbox-label">
+              <input type="checkbox" id="setDefault">
+              <span>设为默认地址</span>
+            </label>
+          </div>
+
+          <!-- 按钮组 -->
+          <div class="button-group">
+            <button type="button" class="btn btn-cancel" onclick="hideAddressModal()">取消</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="address.js"></script>
+</body>
+</html>

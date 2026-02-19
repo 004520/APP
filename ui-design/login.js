@@ -46,12 +46,7 @@ class LoginHandler {
     this.passwordInput.addEventListener('input', () => this.updateButtonState());
     this.studentIdInput.addEventListener('input', () => this.updateButtonState());
 
-    // 链接点击
-    document.querySelector('.link-primary').addEventListener('click', (e) => {
-      e.preventDefault();
-      this.showToast('注册功能开发中...');
-    });
-
+    // 链接点击 - 不阻止默认行为，允许跳转
     document.querySelector('.link-secondary').addEventListener('click', (e) => {
       e.preventDefault();
       this.showToast('忘记密码功能开发中...');

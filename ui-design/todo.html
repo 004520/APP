@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>待办 - 校园交换助手</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="main-menu.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 顶部标题栏 -->
+  <div class="page-header">
+    <h1 class="page-title">待办事项</h1>
+  </div>
+
+  <!-- 空状态提示 -->
+  <div class="empty-state">
+    <h3 class="empty-title">暂无待办事项</h3>
+  </div>
+
+  <!-- 底部导航栏 -->
+  <nav class="bottom-nav">
+    <div class="nav-item" data-tab="mall" onclick="window.location.href='main-menu.html'">
+      <i class="fas fa-home"></i>
+      <span>商城</span>
+      <div class="nav-indicator"></div>
+    </div>
+    <div class="nav-item" data-tab="selling" onclick="window.location.href='selling.html'">
+      <i class="fas fa-box"></i>
+      <span>在售</span>
+      <div class="nav-indicator"></div>
+    </div>
+    <div class="nav-item active" data-tab="todo">
+      <i class="fas fa-list-check"></i>
+      <span>待办</span>
+      <div class="nav-indicator"></div>
+      <div class="nav-badge" id="todoBadge" style="display: none;">0</div>
+    </div>
+    <div class="nav-item" data-tab="settings" onclick="window.location.href='settings.html'">
+      <i class="fas fa-cog"></i>
+      <span>设置</span>
+      <div class="nav-indicator"></div>
+    </div>
+  </nav>
+
+  <script>
+    // 模拟待办数据，实际应该从后端获取
+    const todoCount = 0; // 当前为0，所以小红点隐藏
+
+    // 控制小红点显示
+    const todoBadge = document.getElementById('todoBadge');
+    if (todoCount > 0) {
+      todoBadge.style.display = 'flex';
+      todoBadge.textContent = todoCount > 99 ? '99+' : todoCount;
+    } else {
+      todoBadge.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

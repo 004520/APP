@@ -1,0 +1,8 @@
+{
+  "name": "sendMessage",
+  "runtime": "Nodejs18.15",
+  "handler": "index.main",
+  "timeout": 60,
+  "envVariables": {},
+  "ignore": []
+}

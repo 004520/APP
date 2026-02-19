@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>步骤2 - 填写个人信息</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="register.css">
+  <link rel="stylesheet" href="register-toast.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* 强制显示步骤2 */
+    .step-content[data-step="2"] {
+      display: block !important;
+      animation: slideIn 0.3s ease-out;
+    }
+    .step-content[data-step="1"],
+    .step-content[data-step="3"] {
+      display: none !important;
+    }
+    /* 步骤指示器状态 */
+    .step-dot[data-step="1"] {
+      background: #2ECC71;
+    }
+    .step-dot[data-step="2"] {
+      background: #2ECC71;
+      transform: scale(1.3);
+      box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.2);
+    }
+    .step-line:first-child {
+      background: #2ECC71;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <!-- 顶部导航 -->
+    <div class="header-nav">
+      <button class="back-btn" id="backBtn">
+        <i class="fas fa-arrow-left"></i>
+        <span>返回</span>
+      </button>
+      <h1 class="nav-title">注册新账户</h1>
+    </div>
+
+    <!-- 步骤指示器 -->
+    <div class="steps-indicator">
+      <div class="step-dot active" data-step="1"></div>
+      <div class="step-line"></div>
+      <div class="step-dot active" data-step="2"></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="3"></div>
+    </div>
+
+    <!-- 步骤2：填写个人信息 -->
+    <div class="step-content active" data-step="2">
+      <div class="form-section">
+        <!-- 头像上传 -->
+        <div class="avatar-upload-section">
+          <div class="avatar-upload" id="avatarUpload">
+            <img id="avatarPreview" src="" alt="" style="display: none;">
+            <div class="avatar-placeholder" id="avatarPlaceholder">
+              <i class="fas fa-camera"></i>
+              <span>上传头像</span>
+            </div>
+          </div>
+          <p class="optional-hint">（可选）</p>
+        </div>
+
+        <!-- 昵称输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-tag input-icon"></i>
+            <span>昵称</span>
+            <span class="optional-text">（可选）</span>
+          </label>
+          <input
+            type="text"
+            id="nickname"
+            class="input"
+            placeholder="请输入昵称"
+            maxlength="20"
+            autocomplete="nickname"
+          >
+          <div class="error-msg" id="nicknameError"></div>
+        </div>
+
+        <!-- 真实姓名输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-user input-icon"></i>
+            <span>真实姓名</span>
+            <span class="required-mark">*</span>
+          </label>
+          <input
+            type="text"
+            id="realName"
+            class="input"
+            placeholder="请输入真实姓名"
+            maxlength="10"
+            autocomplete="name"
+          >
+          <div class="error-msg" id="realNameError"></div>
+        </div>
+
+        <!-- 学号输入 -->
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-graduation-cap input-icon"></i>
+            <span>学号</span>
+            <span class="required-mark">*</span>
+          </label>
+          <input
+            type="text"
+            id="registerStudentId"
+            class="input"
+            placeholder="请输入学号"
+            maxlength="12"
+            autocomplete="username"
+          >
+          <div class="error-msg" id="registerStudentIdError"></div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="button-group">
+          <button type="button" class="btn btn-secondary" id="step2Back">上一步</button>
+          <button type="button" class="btn btn-primary" id="step2Next">
+            <span class="btn-text">下一步</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部链接 -->
+    <div class="footer-section">
+      <p class="register-link">
+        已经注册？
+        <a href="login.html" class="link link-primary">立即登录</a>
+      </p>
+    </div>
+  </div>
+
+  <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+</body>
+</html>
