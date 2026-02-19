@@ -553,11 +553,29 @@ class RegisterHandler {
   }
 
   async registerApi(data) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ success: true });
-      }, 2000);
-    });
+    // 使用CloudBase云函数进行注册
+    try {
+      const app = CloudBaseHelper.getApp()
+      const result = await app.callFunction({
+        name: 'register',
+        data: {
+          phone: data.phone,
+          password: data.password,
+          name: data.realName,
+          studentId: data.studentId,
+          nickname: data.nickname || data.realName
+        }
+      })
+
+      if (result.result.success) {
+        return result.result
+      } else {
+        throw new Error(result.result.message || '注册失败')
+      }
+    } catch (error) {
+      console.error('注册请求失败:', error)
+      throw new Error(error.message || '注册失败，请重试')
+    }
   }
 }
 

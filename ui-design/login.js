@@ -180,7 +180,7 @@ class LoginHandler {
 
       // 延迟跳转
       setTimeout(() => {
-        window.location.href = '/index.html';
+        window.location.href = 'main-menu.html';
       }, 1000);
 
     } catch (error) {
@@ -191,17 +191,31 @@ class LoginHandler {
 
   // 登录请求
   async login(data) {
-    // 这里替换为实际的登录 API
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // 模拟登录
-        if (data.phone === '13800138000') {
-          reject(new Error('用户不存在'));
-        } else {
-          resolve({ success: true, token: 'mock_token' });
+    // 使用CloudBase云函数进行登录
+    try {
+      const app = CloudBaseHelper.getApp()
+      const result = await app.callFunction({
+        name: 'login',
+        data: {
+          phone: data.phone,
+          password: data.password
         }
-      }, 2000);
-    });
+      })
+
+      if (result.result.success) {
+        // 保存用户信息到localStorage
+        localStorage.setItem('userInfo', JSON.stringify(result.result.userInfo))
+        localStorage.setItem('userOpenid', result.result.userInfo._openid)
+        localStorage.setItem('isLoggedIn', 'true')
+
+        return result.result
+      } else {
+        throw new Error(result.result.message || '登录失败')
+      }
+    } catch (error) {
+      console.error('登录请求失败:', error)
+      throw new Error(error.message || '登录失败，请重试')
+    }
   }
 
   // 设置加载状态
