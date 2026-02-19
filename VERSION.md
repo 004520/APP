@@ -170,3 +170,43 @@
 - 完整流程测试
 
 ---
+
+### v1.6
+**分支**: feature/login-ui
+**日期**: 2026-02-19
+**描述**: CloudBase SDK集成（第一阶段）
+
+**实现功能**:
+- 创建CloudBase SDK配置文件（cloudbase-config.js）
+- 创建CloudBase SDK初始化文件（cloudbase.js）
+- 登录页面集成CloudBase SDK
+- 注册页面集成CloudBase SDK
+- 登录功能对接login云函数
+- 注册功能对接register云函数
+- 用户信息保存到localStorage
+
+**技术实现**:
+- CloudBase Web SDK引入（8.10.3版本）
+- 云函数调用封装
+- 数据库连接配置
+- 用户状态管理
+
+**已对接云函数**:
+- login（用户登录）
+- register（用户注册）
+
+**待对接云函数**:
+- createProduct（创建商品）
+- updateProduct（更新商品）
+- createOrder（创建订单）
+- confirmOrder（确认订单）
+- sendMessage（发送消息）
+- uploadImage（上传图片）
+
+**下一步**:
+- 在售模块集成商品管理云函数
+- 购物车模块集成订单云函数
+- 消息功能集成消息云函数
+- 图片上传功能集成上传云函数
+
+---
