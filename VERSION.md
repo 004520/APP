@@ -252,11 +252,41 @@
 - login（用户登录）✓
 - register（用户注册）✓
 - createProduct（创建商品）✓
-- updateProduct（更新商品）- 待对接
+- updateProduct（更新商品）✓
 - createOrder（创建订单）✓
 - confirmOrder（确认订单）✓
-- sendMessage（发送消息）- 待对接
+- sendMessage（发送消息）✓
 - uploadImage（上传图片）✓
+
+**部署准备**:
+- 创建默认首页（index.html）
+- 创建部署文档（DEPLOYMENT.md）
+- 优化文件结构
+- 配置访问路径
+
+---
+
+## 部署指南
+
+详细部署步骤请查看 `DEPLOYMENT.md` 文档。
+
+**快速部署**:
+```bash
+cd ui-design
+cloudbase hosting:deploy
+```
+
+**在线部署**:
+访问 CloudBase 控制台静态托管页面进行部署
+
+**访问地址**:
+```
+https://app004520-2gnr9yy23c0f3ed9-1398550543.tcloudbaseapp.com
+```
+
+---
+
+### v1.9
 
 **数据库操作**:
 - users集合：查询、更新、密码修改、手机号修改
